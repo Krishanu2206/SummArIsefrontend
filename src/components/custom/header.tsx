@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CtaButton, HeaderProps, LogoText } from "@/types/headertypes";
 import { getUserMeLoader } from "@/data/services/getusermeloader";
 import { LoggedInUser } from "../helpers/loggedInuser";
+import { SummaryForm } from "../forms/summary-form";
 
 export default async function Header({ data } : {data : HeaderProps}) {
     if(!data) {
@@ -18,6 +19,7 @@ export default async function Header({ data } : {data : HeaderProps}) {
     return (
         <div className="flex items-center justify-between px-4 py-3 bg-white shadow-md dark:bg-gray-800">
         <Logo text={logoText.text} url={logoText.url}/>
+        {user.ok === true && <SummaryForm />}
         <div className="flex items-center gap-4">
             {user.ok === true ? (
                 <LoggedInUser userData={user.data} />

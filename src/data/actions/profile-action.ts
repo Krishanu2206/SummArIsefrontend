@@ -128,14 +128,31 @@ export async function uploadProfileImageAction(
     };
   }
   const updatedImageId = fileUploadResponse[0].id;
-  const payload = { image: updatedImageId };
+  const imagepayload = {image : updatedImageId};
+  console.log("Updated Image Payload for mutate data : ", imagepayload);
 
   // UPDATE USER PROFILE WITH NEW IMAGE
   const updateImageResponse = await mutateData(
     "PUT",
     `/api/users/${userId}`,
-    payload
+    imagepayload
   );
+
+  if (!updateImageResponse) {
+    return {
+      ...prevState,
+      strapiErrors: null,
+      message: "Ops! Something went wrong. Please try again.",
+    };
+  }
+
+  if (updateImageResponse.error) {
+    return {
+      ...prevState,
+      strapiErrors:updateImageResponse.error,
+      message: "Failed to Update Profile.",
+    };
+  }
 
   revalidatePath("/dashboard/account");
 

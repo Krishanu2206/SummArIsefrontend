@@ -7,11 +7,13 @@ export async function fileDeleteService(imageId: string) {
   if (!authToken) throw new Error("No auth token found");
 
   const data = await mutateData("DELETE", `/api/upload/files/${imageId}`);
+  console.log("File Delete Response : ", data);
   return data;
 }
 
 export async function fileUploadService(image: any) {
   const authToken = await getAuthToken();
+  console.log("Auth Token : ", authToken);
   if (!authToken) throw new Error("No auth token found");
 
   const baseUrl = getStrapiURL();

@@ -1,11 +1,13 @@
 import { getStrapiURL } from "@/lib/strapi-imagehelper";
 import { globaldataquery, globalmetadataquery } from "@/queries/globaldataquery";
 import { homepagequery } from "@/queries/homepagequery";
+import { summaryquery } from "@/queries/summaryquery";
+
+import { getAuthToken } from "./services/get-token";
 
 const baseUrl = getStrapiURL();
 
-async function fetchData(url: string) {
-  const authToken = null;
+async function fetchData(url: string, authToken : string | null) {
   const headers = {
     method: "GET",
     headers: {
@@ -32,7 +34,7 @@ export async function getHomePageData() {
 
   url.search = homepagequery;
 
-  return await fetchData(url.href);
+  return await fetchData(url.href, null);
 }
 
 export async function getGlobalData() {
@@ -40,7 +42,7 @@ export async function getGlobalData() {
 
   url.search = globaldataquery
 
-  return await fetchData(url.href);
+  return await fetchData(url.href, null);
 }
 
 export async function getGlobalPageMetadata() {
@@ -48,5 +50,17 @@ export async function getGlobalPageMetadata() {
 
   url.search = globalmetadataquery;
 
-  return await fetchData(url.href);
+  return await fetchData(url.href, null);
+}
+
+export async function getSummaries() {
+
+  const authToken = await getAuthToken();
+  if(!authToken) throw new Error("No auth token found");
+
+  const url = new URL("/api/summaries", baseUrl);
+
+  url.search = summaryquery;
+
+  return await fetchData(url.href, authToken);
 }

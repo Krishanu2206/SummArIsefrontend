@@ -1,3 +1,4 @@
+import { currentUserProfileQuery } from "@/queries/profilequery";
 import { getAuthToken } from "./get-token";
 import { getStrapiURL } from "@/lib/strapi-imagehelper";
 
@@ -5,6 +6,7 @@ export async function getUserMeLoader() {
   const baseUrl = getStrapiURL();
 
   const url = new URL("/api/users/me", baseUrl);
+  url.search = currentUserProfileQuery;
 
   const authToken = await getAuthToken();
   if (!authToken) return { ok: false, data: null, error: null };

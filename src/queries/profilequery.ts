@@ -1,9 +1,13 @@
 import qs from "qs";
 
-export const profilequery = qs.stringify({
+export const queryforupdateprofile = qs.stringify({
+    populate : '*'
+}) //not used anywhere in the code
+
+export const currentUserProfileQuery= qs.stringify({
     populate: {
         image : {
-            fields : ["url", "alternativeText"]
+            fields : ['url', 'alternativeText']
         }
     }
 });
