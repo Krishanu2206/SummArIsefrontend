@@ -1,4 +1,5 @@
-import { isValidYouTubeUrl } from "@/lib/youtube";
+import { getSummaryById } from "@/data/loaders";
+import ClientYouTubePlayer from "@/components/custom/client-youtube-player";
 
 export default async function SummarySingleRoute({
   params,
@@ -7,14 +8,17 @@ export default async function SummarySingleRoute({
   readonly params: any;
   readonly children: React.ReactNode;
 }) {
+  const { videoId } = await params;
+  const data = await getSummaryById(videoId);
+  if (data?.error?.status === 404) return <p>No Items Found</p>;
+  const videoYTId = data.data.videoId;
+
   return (
     <div>
       <div className="h-full grid gap-4 grid-cols-5 p-4">
         <div className="col-span-3">{children}</div>
         <div className="col-span-2">
-          <div>
-            <p>Video will go here</p>
-          </div>
+          <ClientYouTubePlayer videoId={videoYTId as string} />
         </div>
       </div>
     </div>

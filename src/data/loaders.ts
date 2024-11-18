@@ -64,3 +64,15 @@ export async function getSummaries() {
 
   return await fetchData(url.href, authToken);
 }
+
+export async function getSummaryById(summaryId : string) {
+
+  const authToken = await getAuthToken();
+  if(!authToken) throw new Error("No auth token found");
+
+  const url = new URL(`/api/summaries/${summaryId}`, baseUrl);
+
+  url.search = summaryquery;
+
+  return await fetchData(url.href, authToken);
+}
