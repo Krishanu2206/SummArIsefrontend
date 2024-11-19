@@ -19,6 +19,7 @@ export async function mutateData(method: string, path: string, payload?: any) {
     });
 
     if (method === 'DELETE') {
+      console.log("Mutate data delete result : ", response.ok);
       return response.ok;
     }
 

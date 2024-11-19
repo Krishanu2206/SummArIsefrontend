@@ -11,3 +11,9 @@ export interface LinkCardProps {
   title: string;
   summary: string;
 }
+
+export interface SearchParamsProps {
+  searchParams?: {
+    query?: string;
+  };
+}

@@ -1,4 +1,5 @@
-/// import { updateSummaryAction, deleteSummaryAction } from "@/data/actions/summary-actions";
+"use client"
+import { updateSummaryAction, deleteSummaryAction } from "@/data/actions/summary-actions";
 import { cn } from "@/lib/utils";
 
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { SubmitButton } from "@/components/custom/submit-button";
 import ReactMarkdown from "react-markdown";
-// import { DeleteButton } from "@/components/custom/delete-button";
+import { DeleteButton } from "@/components/custom/delete-button";
+import { useActionState } from "react";
+
+import { StrapiErrors } from "@/components/errors/strapi-errors";
+
+const INITIAL_STATE = {
+  strapiErrors: null,
+  data: null,
+  message: null,
+};
 
 export function SummaryCardForm({
   item,
@@ -25,7 +35,11 @@ export function SummaryCardForm({
   readonly item: any;
   readonly className?: string;
 }) {
-  // const deleteSummaryById = deleteSummaryAction.bind(null, item.documentId);
+
+  const deleteSummaryById = deleteSummaryAction.bind(null, item.documentId);
+
+  const [updateformState, updateformAction, isupdatePending] = useActionState(updateSummaryAction, INITIAL_STATE);
+  const [deleteformState, deleteformAction, isdeletePending] = useActionState(deleteSummaryById, INITIAL_STATE);
 
   return (
     <Card className={cn("mb-8 relative h-auto", className)}>
@@ -34,7 +48,7 @@ export function SummaryCardForm({
       </CardHeader>
       <CardContent>
         <div>
-          <form>
+          <form action={updateformAction}>
             <Input
               id="title"
               name="title"
@@ -104,18 +118,23 @@ export function SummaryCardForm({
                 </TabsContent>
               </Tabs>
             </div>
-            <input type="hidden" name="id" value={item.documentId} />
+            <input type="hidden" name="documentId" value={item.documentId} />
             <SubmitButton
               text="Update Summary"
               loadingText="Updating Summary"
             />
           </form>
-          <form>
-            {/* <DeleteButton className="absolute right-4 top-4 bg-red-700 hover:bg-red-600" /> */}
+          <form action={deleteformAction}>
+            <input type="hidden" name="documentId" value={item.documentId} />
+            <DeleteButton className="absolute right-4 top-4 bg-red-700 hover:bg-red-600" />
           </form>
         </div>
       </CardContent>
-      <CardFooter></CardFooter>
+      <CardFooter>
+        <StrapiErrors
+          error={deleteformState?.strapiErrors || updateformState?.strapiErrors}
+        />
+      </CardFooter>
     </Card>
   );
 }
